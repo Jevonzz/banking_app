@@ -20,6 +20,8 @@ import { Control, FieldPath } from "react-hook-form";
 import { z } from "zod";
 import { authFormSchema } from "@/lib/utils";
 
+const formSchema = authFormSchema("sign-up");
+
 const CustomInput = ({
   control,
   name,
@@ -28,12 +30,12 @@ const CustomInput = ({
   type,
   option,
 }: {
-  control: Control<z.infer<typeof authFormSchema>>;
-  name: FieldPath<z.infer<typeof authFormSchema>>;
+  control: Control<z.infer<typeof formSchema>>;
+  name: FieldPath<z.infer<typeof formSchema>>;
   label: string;
   placeholder: string;
   type: string;
-  option?: string[];
+  option?: [string, string][];
 }) => {
   return (
     <FormField
@@ -52,14 +54,21 @@ const CustomInput = ({
                   {...field}
                 />
               ) : (
-                <Select>
-                  <SelectTrigger className="min-w-[200px]">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="input-class min-w-[200px]">
                     <SelectValue placeholder={placeholder} />
                   </SelectTrigger>
                   <SelectContent>
-                    {option?.map((x) => (
-                      <SelectItem key={x} value={x} className="bg-white">
-                        {x}
+                    {option?.map(([shortForm, fullName]) => (
+                      <SelectItem
+                        key={shortForm}
+                        value={shortForm}
+                        className="bg-white"
+                      >
+                        {fullName}
                       </SelectItem>
                     ))}
                   </SelectContent>

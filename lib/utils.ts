@@ -195,16 +195,19 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = z.object({
-  //sign-in field
-  email: z.string().email(),
-  password: z.string().min(8),
-  //sign-up field
-  firstName: z.string(),
-  lastName: z.string(),
-  address: z.string(),
-  state: z.string(),
-  postalCode: z.string(),
-  dob: z.string(),
-  ic: z.string(),
-});
+export const authFormSchema = (type: string) =>
+  z.object({
+    //sign-in field
+    email: z.string().email(),
+    password: z.string().min(8),
+    //sign-up field
+    firstName: type === "sign-in" ? z.string().optional() : z.string(),
+    lastName: type === "sign-in" ? z.string().optional() : z.string(),
+    address: type === "sign-in" ? z.string().optional() : z.string(),
+    city: type === "sign-in" ? z.string().optional() : z.string(),
+    state: type === "sign-in" ? z.string().optional() : z.string(),
+    postalCode: type === "sign-in" ? z.string().optional() : z.string(),
+    dob: type === "sign-in" ? z.string().optional() : z.string(),
+    ic:
+      type === "sign-in" ? z.string().optional() : z.string().regex(/^\d{12}$/),
+  });
